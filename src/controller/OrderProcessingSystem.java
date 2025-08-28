@@ -270,7 +270,7 @@ public class OrderProcessingSystem {
             return;
         }
 
-        // Remove selected from queue (rebuild without it)
+        // Remove selected from queue
         List<Order> buffer = new ArrayList<>();
         int m = orderQueue.size();
         for (int i = 0; i < m; i++) {
@@ -296,7 +296,6 @@ public class OrderProcessingSystem {
             s = Sorter.selectionSort(o.getItems());
             System.out.println("Sorted by Selection Sort.");
         }
-        // (removed duplicate advanced choice block)
 
         ArrayStack<BookItem> packingStack = new ArrayStack<>(Math.max(8, o.getItems().size()));
         for (BookItem item : o.getItems()) packingStack.push(item);
@@ -373,7 +372,7 @@ public class OrderProcessingSystem {
             orderQueue.enqueue(tmp);
         }
 
-        // Search pending first (Linear), then processed (Binary on sorted copy); show immediately when found
+        // Search pending first (Linear), then processed (Binary); show immediately when found
         Searcher.Stats sPending = new Searcher.Stats();
         int idxPending = Searcher.linearSearch(pendingSnapshot, id, sPending);
         if (idxPending >= 0) {
@@ -383,7 +382,7 @@ public class OrderProcessingSystem {
             return;
         }
 
-        // Processed: use Binary Search on a sorted copy to align with README
+        // Processed: use Binary Search
         Searcher.Stats sProcessed = new Searcher.Stats();
         List<Order> sortedProcessed = new ArrayList<>(processedOrders);
         Collections.sort(sortedProcessed);
@@ -401,9 +400,6 @@ public class OrderProcessingSystem {
     private void printOrderSummary(Order o) {
         String name = o.getCustomerName();
         String address = o.getShippingAddress();
-        // Recover address from toString parsing is fragile; we keep it inside Order, so add a getter if needed.
-        // For now, print the Order.toString() plus a computed table with prices.
-
         String header = String.format("%-20s | %-25s | %-30s | %-20s | %-8s | %-8s | %-10s | %-10s",
             "Name", "Address", "Books", "Author", "Quantity", "Price", "Order Id", "Status");
         String sep = new String(new char[Math.min(150, header.length())]).replace('\0','-');
